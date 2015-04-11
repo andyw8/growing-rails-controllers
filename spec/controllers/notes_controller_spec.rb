@@ -90,7 +90,7 @@ RSpec.describe NotesController, :type => :controller do
   describe "PUT update" do
     describe "with valid params" do
       let(:new_attributes) {
-        skip("Add a hash of attributes valid for your model")
+        valid_attributes.merge(title: "New title")
       }
 
       it "updates the requested note" do
@@ -99,7 +99,7 @@ RSpec.describe NotesController, :type => :controller do
         put :update, {:id => note.to_param, :note => new_attributes}, valid_session
 
         note.reload
-        skip("Add assertions for updated state")
+        expect(note.title).to eq("New title")
       end
 
       it "assigns the requested note as @note" do
