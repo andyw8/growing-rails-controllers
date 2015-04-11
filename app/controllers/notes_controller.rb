@@ -60,6 +60,6 @@ class NotesController < ApplicationController
   end
 
   def note_scope
-    Note.scoped
+    Note.all
   end
 end
