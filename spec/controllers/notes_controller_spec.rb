@@ -128,7 +128,7 @@ RSpec.describe NotesController, :type => :controller do
         expect(assigns(:note)).to eq(note)
       end
 
-      it "re-renders the 'edit' template" do
+      xit "re-renders the 'edit' template" do
         note = Note.create! valid_attributes
 
         put :update, {:id => note.to_param, :note => invalid_attributes}, valid_session
