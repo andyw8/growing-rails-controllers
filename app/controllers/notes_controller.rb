@@ -1,3 +1,4 @@
+# Class description goes here
 class NotesController < ApplicationController
   def index
     load_notes
