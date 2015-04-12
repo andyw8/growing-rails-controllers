@@ -2,7 +2,7 @@
 
 ## Overview
 
-In the book [Growing Rails Applicationsin
+In the book [Growing Rails Applications in
 Practice](https://leanpub.com/growing-rails), the authors present a standard way
 of writing controllers.
 
@@ -25,6 +25,6 @@ the following principles:
 
 I made some minor changes from the code in the book:
 
-* Use `all` instead of `scoped` for Rails 4 compatability
-* USe `||` instead of `or` to avoid RuboCop warning
+* Use `all` instead of `scoped` for Rails 4 compatibility
+* Use `||` instead of `or` to avoid RuboCop warning
 * Use single line `if` modifier to avoid RuboCop warning
