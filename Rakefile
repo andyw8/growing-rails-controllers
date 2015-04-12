@@ -5,7 +5,6 @@ require File.expand_path('../config/application', __FILE__)
 
 Rails.application.load_tasks
 task(:default).clear
-task default: [:spec]
 
 if defined? RSpec
   task(:spec).clear
@@ -14,4 +13,11 @@ if defined? RSpec
   end
 end
 
-task default: "bundler:audit"
+task default: [:spec, :rubocop]
+
+require "rubocop/rake_task"
+
+desc "Run RuboCop"
+RuboCop::RakeTask.new(:rubocop) do |task|
+  task.options = %w(--display-cop-names)
+end
