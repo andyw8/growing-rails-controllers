@@ -13,7 +13,7 @@ class NotesController < ApplicationController
 
   def create
     build_note
-    save_note or render 'new'
+    save_note || render('new')
   end
 
   def edit
@@ -24,7 +24,7 @@ class NotesController < ApplicationController
   def update
     load_note
     build_note
-    save_note or render 'edit'
+    save_note || render('edit')
   end
 
   def destroy
@@ -49,9 +49,7 @@ class NotesController < ApplicationController
   end
 
   def save_note
-    if @note.save
-      redirect_to @note
-    end
+    redirect_to @note if @note.save
   end
 
   def note_params

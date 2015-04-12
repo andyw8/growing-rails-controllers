@@ -1,158 +1,200 @@
 require 'rails_helper'
 
-RSpec.describe NotesController, :type => :controller do
-  let(:valid_attributes) {
-    { title: "foo", text: "bar", published: true}
-  }
+RSpec.describe NotesController, type: :controller do
+  describe 'GET index' do
+    it 'assigns all notes as @notes' do
+      notes = double(:notes)
+      stub_note_scope(to_a: notes)
 
-  let(:invalid_attributes) {
-    valid_attributes.except(:title)
-  }
+      get :index
 
-  let(:valid_session) { {} }
-
-  describe "GET index" do
-    it "assigns all notes as @notes" do
-      note = Note.create! valid_attributes
-
-      get :index, {}, valid_session
-
-      expect(assigns(:notes)).to eq([note])
+      expect(assigns(:notes)).to eq(notes)
     end
   end
 
-  describe "GET show" do
-    it "assigns the requested note as @note" do
-      note = Note.create! valid_attributes
+  describe 'GET show' do
+    it 'assigns the requested note as @note' do
+      note = stub_find_note
 
-      get :show, {:id => note.to_param}, valid_session
+      get :show, id: note.to_param
 
       expect(assigns(:note)).to eq(note)
     end
   end
 
-  describe "GET new" do
-    it "assigns a new note as @note" do
-      get :new, {}, valid_session
+  describe 'GET new' do
+    it 'assigns a new note as @note' do
+      note = stub_build_note.as_null_object
 
-      expect(assigns(:note)).to be_a_new(Note)
-    end
-  end
-
-  describe "GET edit" do
-    it "assigns the requested note as @note" do
-      note = Note.create! valid_attributes
-
-      get :edit, {:id => note.to_param}, valid_session
+      get :new
 
       expect(assigns(:note)).to eq(note)
     end
   end
 
-  describe "POST create" do
-    describe "with valid params" do
-      it "creates a new Note" do
-        expect {
-          post :create, {:note => valid_attributes}, valid_session
-        }.to change(Note, :count).by(1)
-      end
+  describe 'GET edit' do
+    it 'assigns the requested note as @note' do
+      note = stub_find_note.as_null_object
 
-      it "assigns a newly created note as @note" do
-        post :create, {:note => valid_attributes}, valid_session
+      get :edit, id: note.to_param
 
-        expect(assigns(:note)).to be_a(Note)
-
-        expect(assigns(:note)).to be_persisted
-      end
-
-      it "redirects to the created note" do
-        post :create, {:note => valid_attributes}, valid_session
-
-        expect(response).to redirect_to(Note.last)
-      end
-    end
-
-    describe "with invalid params" do
-      it "assigns a newly created but unsaved note as @note" do
-        post :create, {:note => invalid_attributes}, valid_session
-
-        expect(assigns(:note)).to be_a_new(Note)
-      end
-
-      it "re-renders the 'new' template" do
-        post :create, {:note => invalid_attributes}, valid_session
-
-        expect(response).to render_template("new")
-      end
+      expect(assigns(:note)).to eq(note)
     end
   end
 
-  describe "PUT update" do
-    describe "with valid params" do
-      let(:new_attributes) {
-        valid_attributes.merge(title: "New title")
-      }
+  describe 'POST create' do
+    it 'creates a new Note' do
+      note = stub_build_note_as_spy
 
-      it "updates the requested note" do
-        note = Note.create! valid_attributes
+      post :create, note: attributes
 
-        put :update, {:id => note.to_param, :note => new_attributes}, valid_session
+      expect(note).to have_received(:attributes=).with(attributes)
+      expect(note).to have_received(:save)
+    end
 
-        note.reload
-        expect(note.title).to eq("New title")
-      end
+    describe 'with valid params' do
+      it 'assigns a newly created note as @note' do
+        note = stub_build_note(save: true).as_null_object
 
-      it "assigns the requested note as @note" do
-        note = Note.create! valid_attributes
-
-        put :update, {:id => note.to_param, :note => valid_attributes}, valid_session
+        post :create
 
         expect(assigns(:note)).to eq(note)
       end
 
-      it "redirects to the note" do
-        note = Note.create! valid_attributes
+      it 'redirects to the created note' do
+        note = stub_build_note(save: true).as_null_object
 
-        put :update, {:id => note.to_param, :note => valid_attributes}, valid_session
+        post :create
 
         expect(response).to redirect_to(note)
       end
     end
 
-    describe "with invalid params" do
-      it "assigns the note as @note" do
-        note = Note.create! valid_attributes
+    describe 'with invalid params' do
+      it 'assigns a newly created but unsaved note as @note' do
+        note = stub_build_note(save: false).as_null_object
 
-        put :update, {:id => note.to_param, :note => invalid_attributes}, valid_session
+        post :create
 
         expect(assigns(:note)).to eq(note)
       end
 
-      xit "re-renders the 'edit' template" do
-        note = Note.create! valid_attributes
+      it 're-renders the \'new\' template' do
+        stub_build_note(save: false).as_null_object
 
-        put :update, {:id => note.to_param, :note => invalid_attributes}, valid_session
+        post :create
 
-        expect(response).to render_template("edit")
+        expect(response).to render_template('new')
       end
     end
   end
 
-  describe "DELETE destroy" do
-    it "destroys the requested note" do
-      note = Note.create! valid_attributes
+  describe 'PUT update' do
+    it 'updates the requested note' do
+      note = stub_find_note_as_spy
 
-      expect {
-        delete :destroy, {:id => note.to_param}, valid_session
-      }.to change(Note, :count).by(-1)
+      put :update, id: note.to_param, note: new_attributes
+
+      expect(note).to have_received(:attributes=).with(new_attributes)
+      expect(note).to have_received(:save)
     end
 
-    it "redirects to the notes list" do
-      note = Note.create! valid_attributes
+    describe 'with valid params' do
+      it 'assigns the requested note as @note' do
+        note = stub_find_note(save: true).as_null_object
 
-      delete :destroy, {:id => note.to_param}, valid_session
+        put :update, id: note.to_param
+
+        expect(assigns(:note)).to eq(note)
+      end
+
+      it 'redirects to the note' do
+        note = stub_find_note(save: true).as_null_object
+
+        put :update, id: note.to_param
+
+        expect(response).to redirect_to(note)
+      end
+    end
+
+    describe 'with invalid params' do
+      it 'assigns the note as @note' do
+        note = stub_find_note(save: false).as_null_object
+
+        put :update, id: note.to_param, note: new_attributes
+
+        expect(assigns(:note)).to eq(note)
+      end
+
+      it 're-renders the \'edit\' template' do
+        note = stub_find_note(save: false).as_null_object
+
+        put :update, id: note.to_param, note: new_attributes
+
+        expect(response).to render_template('edit')
+      end
+    end
+
+    let(:new_attributes) { attributes.merge(title: 'New title') }
+  end
+
+  describe 'DELETE destroy' do
+    it 'destroys the requested note' do
+      note = stub_find_note_as_spy
+
+      delete :destroy, id: note.to_param
+
+      expect(note).to have_received(:destroy)
+    end
+
+    it 'redirects to the notes list' do
+      note = stub_find_note(destroy: true)
+
+      delete :destroy, id: note.to_param
 
       expect(response).to redirect_to(notes_url)
     end
   end
+
+  def stub_note_scope(opts = {})
+    instance_double('Note::ActiveRecord_Relation').tap do |note_scope|
+      expect(class_double('Note').as_stubbed_const).to receive(:all)
+        .and_return(note_scope)
+      opts.each do |method_name, return_value|
+        expect(note_scope).to receive(method_name).and_return(return_value)
+      end
+    end
+  end
+
+  def stub_build_note(save: nil)
+    instance_double('Note', to_model: Note.new).tap do |note|
+      expect(stub_note_scope).to receive(:build).and_return(note)
+
+      expect(note).to receive(:save).and_return(save) unless save.nil?
+    end
+  end
+
+  def stub_find_note(save: nil, destroy: nil)
+    instance_double('Note', to_model: Note.new).tap do |note|
+      expect(stub_note_scope).to receive(:find).with(note.to_param)
+        .and_return(note)
+      expect(note).to receive(:save).and_return(save) unless save.nil?
+      expect(note).to receive(:destroy).and_return(destroy) unless destroy.nil?
+    end
+  end
+
+  def stub_build_note_as_spy
+    instance_spy('Note', to_model: Note.new).tap do |note|
+      stub_note_scope(build: note)
+    end
+  end
+
+  def stub_find_note_as_spy
+    instance_spy('Note', to_model: Note.new).tap do |note|
+      expect(stub_note_scope).to receive(:find).with(note.to_param)
+        .and_return(note)
+    end
+  end
+
+  let(:attributes) { { title: 'foo', text: 'bar', published: true } }
 end
