@@ -3,7 +3,7 @@ require 'rails_helper'
 RSpec.describe NotesController, type: :controller do
   describe 'GET index' do
     it 'assigns all notes as @notes' do
-      notes = instance_double("Array")
+      notes = instance_double('Array')
       stub_note_scope(to_a: notes)
 
       get :index
