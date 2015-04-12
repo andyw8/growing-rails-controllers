@@ -22,6 +22,7 @@ the following principles:
 * Extract duplication into plain Ruby methods
 * Uses `expect` instead of `allow` for more confident specs.
 * Ruby 1.9 hash syntax
+* No use of `tap`
 
 I made some minor changes from the code in the book:
 
