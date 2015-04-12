@@ -9,8 +9,6 @@ of writing controllers.
 This project illustrates my approach on how to test these controllers, based on
 the following principles:
 
-### Principles
-
 * The specs should fully isolated from the database
 * No use of any fixtures or factories
 * Use [verifying doubles](https://relishapp.com/rspec/rspec-mocks/docs/verifying-doubles)
