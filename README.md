@@ -29,3 +29,4 @@ I made some minor changes from the code in the book:
 * Use `all` instead of `scoped` for Rails 4 compatibility
 * Use `||` instead of `or` to avoid RuboCop warning
 * Use single line `if` modifier to avoid RuboCop warning
+* Add a condition to `build_note` to prevent unnecessary setting

@@ -24,9 +24,10 @@ RSpec.describe NotesController, type: :controller do
 
   describe 'GET new' do
     it 'assigns a new note as @note' do
-      note = stub_build_note.as_null_object
+      note = stub_build_note
+      expect(note).to receive(:attributes=).with(attributes)
 
-      get :new
+      get :new, note: attributes
 
       expect(assigns(:note)).to eq(note)
     end
@@ -34,7 +35,7 @@ RSpec.describe NotesController, type: :controller do
 
   describe 'GET edit' do
     it 'assigns the requested note as @note' do
-      note = stub_find_note.as_null_object
+      note = stub_find_note
 
       get :edit, id: note.to_param
 
@@ -54,7 +55,7 @@ RSpec.describe NotesController, type: :controller do
 
     describe 'with valid params' do
       it 'assigns a newly created note as @note' do
-        note = stub_build_note(save: true).as_null_object
+        note = stub_build_note(save: true)
 
         post :create
 
@@ -62,7 +63,7 @@ RSpec.describe NotesController, type: :controller do
       end
 
       it 'redirects to the created note' do
-        note = stub_build_note(save: true).as_null_object
+        note = stub_build_note(save: true)
 
         post :create
 
@@ -72,7 +73,7 @@ RSpec.describe NotesController, type: :controller do
 
     describe 'with invalid params' do
       it 'assigns a newly created but unsaved note as @note' do
-        note = stub_build_note(save: false).as_null_object
+        note = stub_build_note(save: false)
 
         post :create
 
@@ -80,7 +81,7 @@ RSpec.describe NotesController, type: :controller do
       end
 
       it 're-renders the \'new\' template' do
-        stub_build_note(save: false).as_null_object
+        stub_build_note(save: false)
 
         post :create
 
@@ -101,7 +102,7 @@ RSpec.describe NotesController, type: :controller do
 
     describe 'with valid params' do
       it 'assigns the requested note as @note' do
-        note = stub_find_note(save: true).as_null_object
+        note = stub_find_note(save: true)
 
         put :update, id: note.to_param
 
@@ -109,7 +110,7 @@ RSpec.describe NotesController, type: :controller do
       end
 
       it 'redirects to the note' do
-        note = stub_find_note(save: true).as_null_object
+        note = stub_find_note(save: true)
 
         put :update, id: note.to_param
 
@@ -119,7 +120,8 @@ RSpec.describe NotesController, type: :controller do
 
     describe 'with invalid params' do
       it 'assigns the note as @note' do
-        note = stub_find_note(save: false).as_null_object
+        note = stub_find_note(save: false)
+        expect(note).to receive(:attributes=).with(new_attributes)
 
         put :update, id: note.to_param, note: new_attributes
 
@@ -127,7 +129,8 @@ RSpec.describe NotesController, type: :controller do
       end
 
       it 're-renders the \'edit\' template' do
-        note = stub_find_note(save: false).as_null_object
+        note = stub_find_note(save: false)
+        expect(note).to receive(:attributes=).with(new_attributes)
 
         put :update, id: note.to_param, note: new_attributes
 

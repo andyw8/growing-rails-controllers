@@ -46,7 +46,7 @@ class NotesController < ApplicationController
 
   def build_note
     @note ||= note_scope.build
-    @note.attributes = note_params
+    @note.attributes = note_params unless note_params.empty?
   end
 
   def save_note
